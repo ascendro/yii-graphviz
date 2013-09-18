@@ -74,7 +74,7 @@ class Graphviz extends CApplicationComponent
         $cmd .= ' '.escapeshellarg($src); //input
         exec($cmd, $output, $error);
         if ($error != 0){
-            return false;
+            throw new CException("Graphviz image generation error. Code: $error. Command: $cmd Output: ".print_r($output, true)."");
         }
         return true;
     }
