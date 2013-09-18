@@ -13,7 +13,10 @@
  */ 
 class Graph extends CWidget
 {
-    const PICTURE_STORAGE = '/files/graphs/';
+    /**
+     * Relative to the webroot alias
+     */
+    const PICTURE_STORAGE = 'graphs/';
 
 
     /**
@@ -45,8 +48,8 @@ class Graph extends CWidget
     public function run()
     {
         $hash = md5($this->configuration);
-        $graphFile = Yii::app()->basePath . '/..' . static::PICTURE_STORAGE . $hash . ".png";
-        $mapFile = Yii::app()->basePath . '/..' . static::PICTURE_STORAGE . $hash . ".map";
+        $graphFile = Yii::getPathOfAlias('webroot') . '/' . static::PICTURE_STORAGE . $hash . ".png";
+        $mapFile = Yii::getPathOfAlias('webroot') . '/' . static::PICTURE_STORAGE . $hash . ".map";
 
         $result = "";
         if (!file_exists($graphFile)) {
@@ -68,7 +71,7 @@ class Graph extends CWidget
             echo '<map name="map'.$hash.'" id="map'.$hash.'">'.$mapContents.'</map>';
         }
 
-        echo '<img src="'.Yii::app()->baseUrl.static::PICTURE_STORAGE.$hash.'.png" name="graph'.$hash.'" id="graph'.$hash.'" title="'.$this->title.'" alt="'.$this->alt.'" '.(($this->map)?'usemap="#map'.$hash.'"':'').' >';
+        echo '<img src="'.Yii::app()->baseUrl . '/' . static::PICTURE_STORAGE.$hash.'.png" name="graph'.$hash.'" id="graph'.$hash.'" title="'.$this->title.'" alt="'.$this->alt.'" '.(($this->map)?'usemap="#map'.$hash.'"':'').' >';
     }
 
 }
