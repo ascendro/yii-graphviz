@@ -35,11 +35,22 @@ class Graph extends CWidget
 
     public $map = false;
 
+    private $_graphDirectory = null;
+    
     public function init() {
         parent::init();
+        $this->_graphDirectory = Yii::getPathOfAlias('webroot') . DIRECTORY_SEPARATOR . static::PICTURE_STORAGE;
+
+        if(!file_exists($this->_graphDirectory))
+        {
+            mkdir($this->_graphDirectory,0777,true);
+        }
+
+        Yii::import('ext.yii-graphviz.components.Graphviz');
         if (!$this->graphvizComponent) {
             $this->graphvizComponent = new Graphviz();
         }
+        
     }
 
     /**
@@ -48,16 +59,14 @@ class Graph extends CWidget
     public function run()
     {
         $hash = md5($this->configuration);
-        $graphFile = Yii::getPathOfAlias('webroot') . '/' . static::PICTURE_STORAGE . $hash . ".png";
-        $mapFile = Yii::getPathOfAlias('webroot') . '/' . static::PICTURE_STORAGE . $hash . ".map";
+        $graphFile = $this->_graphDirectory . $hash . ".png";
+        $mapFile = $this->_graphDirectory . $hash . ".map";
 
         $result = "";
         if (!file_exists($graphFile)) {
-            $path = Yii::app()->basePath .  '/..' . static::PICTURE_STORAGE;
-            @mkdir($path,0777,true);
             $result = $this->graphvizComponent->generateGraphvizFromString($this->configuration,$graphFile,$this->map);
         }
-
+        
         if ($this->map) {
             if (!file_exists($mapFile)) {
                 if (!$result) {

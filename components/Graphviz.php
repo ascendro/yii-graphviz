@@ -55,6 +55,7 @@ class Graphviz extends CApplicationComponent
     public function generateGraphvizFromString($configurationString,$destination,$createMap = false) {
         $tempFile = tempnam($this->tmpDirectory,"");
         file_put_contents($tempFile,$configurationString);
+        chmod($tempFile, 0644);
         $result = $this->generateGraphvizFromFile($tempFile,$destination,$createMap);
         unlink($tempFile);
         return $result;
