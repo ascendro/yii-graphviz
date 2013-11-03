@@ -55,6 +55,7 @@ class Graphviz extends CApplicationComponent
     public function generateGraphvizFromString($configurationString,$destination,$createMap = false) {
         $tempFile = tempnam($this->tmpDirectory,"");
         file_put_contents($tempFile,$configurationString);
+        chmod($tempFile, 0644);
         $result = $this->generateGraphvizFromFile($tempFile,$destination,$createMap);
         unlink($tempFile);
         return $result;
@@ -72,6 +73,7 @@ class Graphviz extends CApplicationComponent
         $cmd .= ' -K'.$this->layoutEngine;
         $cmd .= ' -o'.escapeshellarg($destination); //output
         $cmd .= ' '.escapeshellarg($src); //input
+        $cmd .= ' 2>&1';
         exec($cmd, $output, $error);
         if ($error != 0){
             throw new CException("Graphviz image generation error. Code: $error. Command: $cmd Output: ".print_r($output, true)."");
